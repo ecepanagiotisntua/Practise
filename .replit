@@ -1,2 +1,2 @@
 language = "cpp"
-run = "g++ -g3 -O0 main.cpp -o dummy.out"
+run = "g++ -g3 -O0 container.cpp -o a.out"
