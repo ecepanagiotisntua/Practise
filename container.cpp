@@ -167,7 +167,7 @@ class bstree: public Container<T> {
       }
     }
 
-    bool insert(node *t, const T &x){
+    static bool insert(node *t, const T &x){
       if (x < t->data){
         if (t->left == nullptr){
           t->left = new node(x, nullptr, nullptr, t);
