@@ -194,6 +194,17 @@ class bstree: public Container<T> {
       }
     }
 
+    static node* leftdown(node *t){
+      if ( t == nullptr||t->left ==nullptr)return t;
+      else return leftdown(t->left);
+
+    }
+
+    static node * leftup(node * t){
+      if (t->parent ==nullptr || t->parent->left == t)return t->parent;
+      else leftup(t->parent);
+    }
+
   public:
     bstree() 
       : root(nullptr), the_size(0) {}
@@ -211,7 +222,7 @@ class bstree: public Container<T> {
     virtual int size() const override { return the_size; }
 
     virtual void clear() override {
-      purge();
+      purge(root);
       root = nullptr;
       the_size = 0;
     }
@@ -236,13 +247,16 @@ class bstree: public Container<T> {
           : ptr(i.ptr){}
         //++i 
         iterator & operator++() {
-          ptr = ptr->next;
+          if(ptr != nullptr){
+            if(ptr->right != nullptr) ptr = leftdown(ptr->right);
+            else ptr = leftup(ptr);
+          }
           return *this;
         }
         //i++
         iterator operator++(int){
           iterator result(*this);
-          ptr = ptr-> next;
+          ++(*this);
           return result;
         }
 
@@ -257,11 +271,11 @@ class bstree: public Container<T> {
         iterator(node *p)
           : ptr(p) {}
 
-        friend class dlist;
+        friend class bstree;
       
     };
 
-    iterator begin() { return iterator(the_front); }
+    iterator begin() { return iterator(leftdown(root)); }
     iterator end() { return iterator(nullptr); }
 
   
@@ -270,23 +284,31 @@ class bstree: public Container<T> {
 
 template <typename T>
 void print(dlist<T> &l) {
- 
-  for (auto i = l.begin(); i != l.end(); ++i){
-    cout << " " << *i;
-  }
+ bool first = true;
+ for(T &x: l){
+   if (first) first = false; else cout<<" ";
+   cout<<x;
+ }
 }
 
-int main() {
+
+
+int main(){
   dlist<int> l;
-  for (int i = 0; i < 10; i++) l.push_back(i);
-  cout << "size: " << l.size() << " :";
-  print (l);
-  cout << endl;
-  print (l);
-  for (int &x : l) x*=2;
+  for (int i = 0 ; i < 10 ; ++i) l.push_back(i);
+  cout<< "l of size "<<l.size()<<": ";
   print(l);
+  cout<<endl;
+  cout<< "Print the list again "<<endl;
+  cout<< "l of size "<<l.size()<<": ";
+  print(l);
+  cout<<endl;
 
+
+
+  bstree<int> t;
+  int x[] = {5,2,8,4,1,7,6,0,9,3};
+  for(int i = 0; i < 10 ; i++) t.insert(x[i]);
+  cout<<"t of size "<<t.size()<<": ";
+  t.print(); cout<<endl;
 }
-
-
-
